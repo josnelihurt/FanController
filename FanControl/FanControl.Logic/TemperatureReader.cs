@@ -7,7 +7,7 @@ using System.Timers;
 
 namespace FanControl
 {
-    internal class TemperatureReader
+    public class TemperatureReader
     {
         public struct Sensor
         {
@@ -64,7 +64,7 @@ namespace FanControl
             
         }
 
-        internal void Stop()
+        public void Stop()
         {
             _timer.Stop();
         }

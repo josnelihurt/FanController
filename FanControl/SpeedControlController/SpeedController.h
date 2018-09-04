@@ -12,5 +12,8 @@ public ref class  SpeedController
 public:
 	~SpeedController();
 	bool Init();
+	bool Reset();
 	bool SetSpeed(const std::uint8_t percentage);
+private:
+	bool SendByte(const std::uint8_t byte);
 };

@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace FanControl
 {
-    internal class FanControlSerial : IFanControl
+    public class FanControlSerial : IFanControl
     {
         string _port;
         SerialPort _serialPort;
@@ -68,25 +68,11 @@ namespace FanControl
         /// Set the value for speed output
         /// </summary>
         /// <param name="value"> value bw 0.0 and 1.0, 1.0 is max</param>
-        public void SetSpeed(float value)
+        public void SetSpeed(byte value)
         {
-            int internalValue = 0;
-            if (value < 0)
-            {
-                internalValue = 0;
-            }
-            else if (value > 1.0f)
-            {
-                internalValue = 100;
-            }
-            else
-            {
-                internalValue = (int)(value * 100);
-            }
-
             var buffer = new byte[2];
             int i = 0;
-            buffer[i++] = (byte)internalValue;
+            buffer[i++] = (byte)value;
             buffer[i++] = (byte)'\n';
             _serialPort.Write(buffer, 0, buffer.Length);
             Thread.Sleep(500);
