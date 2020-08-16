@@ -31,7 +31,8 @@ namespace FanControl
                 {
                     MaximunTemperature = Convert.ToInt32(ConfigurationSettings.AppSettings.Get("max_value_celsius")),
                     MinimunTemperature = Convert.ToInt32(ConfigurationSettings.AppSettings.Get("min_value_celsius")),
-                    SerialPort = ConfigurationSettings.AppSettings.Get("port")
+                    SerialPort = ConfigurationSettings.AppSettings.Get("port"),
+                    SensorName = ConfigurationSettings.AppSettings.Get("sensor_input"),
                 };
 
                 Debug.WriteLine("Settings : " + settings.ToString(), "MAIN");

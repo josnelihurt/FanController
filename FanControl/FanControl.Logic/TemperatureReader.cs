@@ -1,4 +1,5 @@
 ﻿
+using OpenHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,6 +8,25 @@ using System.Timers;
 
 namespace FanControl
 {
+
+    public class UpdateVisitor : IVisitor
+    {
+        public void VisitComputer(IComputer computer)
+        {
+            computer.Traverse(this);
+        }
+
+        public void VisitHardware(IHardware hardware)
+        {
+            hardware.Update();
+            foreach (IHardware subHardware in hardware.SubHardware)
+                subHardware.Accept(this);
+        }
+
+        public void VisitSensor(ISensor sensor) { }
+
+        public void VisitParameter(IParameter parameter) { }
+    }
     public class TemperatureReader
     {
         public struct Sensor
@@ -17,6 +37,9 @@ namespace FanControl
         public delegate void OnNewTemperatureEH(float average, List<Sensor> sensors);
         public event OnNewTemperatureEH OnNewTemperature;
         private Timer _timer;
+        private Computer _computerHardware;
+        private IVisitor _visitor;
+
         public TemperatureReader()
         {
             _timer = new Timer(500);
@@ -33,35 +56,40 @@ namespace FanControl
 
         public void Start()
         {
+            _computerHardware = new Computer();
+            _computerHardware.HardwareAdded += ComputerHardware_HardwareAdded;
+            _computerHardware.HardwareRemoved += ComputerHardware_HardwareRemoved;
+            _computerHardware.Open();
+            _computerHardware.GPUEnabled = true;
+            _computerHardware.CPUEnabled = true;            
+            _visitor = new UpdateVisitor();
             _timer.Start();
 
         }
+
+        private void ComputerHardware_HardwareRemoved(IHardware hardware)
+        {
+        }
+
         private void Read()
         {
-            var computerHardware = new OpenHardwareMonitor.Hardware.Computer();
-            computerHardware.CPUEnabled = true;
-            computerHardware.Open();
-            var hardwareCount = computerHardware.Hardware.Count();
+            _computerHardware.Accept(_visitor);
+            var hardwareCount = _computerHardware.Hardware.Count();
             if (hardwareCount > 0)
             {
-                var sensors = computerHardware.Hardware[0].Sensors.ToList();
-                var temperatureSensors = sensors.FindAll(x => x.SensorType == OpenHardwareMonitor.Hardware.SensorType.Temperature);
-                var validTemperatureSensors = temperatureSensors.FindAll(x => x.Value.HasValue);
-                if(validTemperatureSensors.Count == 0)
-                {
-                    Debug.Write("ERROR Invalid Sensors");
-                    return;
-                }
-                float average = validTemperatureSensors.Average(x => x.Value.Value);
-                var sensorsOutput = new List<Sensor>();
-                foreach (var sensor in validTemperatureSensors)
-                {
-                    sensorsOutput.Add(new Sensor() { Name= sensor.Name, Value = sensor.Value.Value});
-                }
-                OnNewTemperature?.Invoke(average, sensorsOutput);
+                var sensors = _computerHardware.Hardware 
+                    .SelectMany(x=>x.Sensors)
+                    .Where(x => x.SensorType == SensorType.Temperature)
+                    .Where(x => x.Value.HasValue)
+                    .ToList().ConvertAll(x => new Sensor() { Name = x.Name, Value = x.Value.Value });
+                
+                float average = sensors.Average(x => x.Value);
+                OnNewTemperature?.Invoke(average, sensors);
+            }            
+        }
 
-            }
-            
+        private void ComputerHardware_HardwareAdded(IHardware hardware)
+        {
         }
 
         public void Stop()

@@ -39,8 +39,7 @@ void loop()
         blink(2);
         softReset();
       }
-      else
-      {
+      else{
         set_pwm_value(lastRead);
       }
       DigiUSB.write(lastRead);
@@ -48,7 +47,7 @@ void loop()
     
   // refresh the usb port for 10 milliseconds
   DigiUSB.delay(10);
-}
+} 
 
 
 /*

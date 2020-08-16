@@ -33,6 +33,11 @@
             this._disconnect = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this._reset = new System.Windows.Forms.Button();
+            this.labelCpu = new System.Windows.Forms.Label();
+            this.labelGPU = new System.Windows.Forms.Label();
+            this._gpuValue = new System.Windows.Forms.Label();
+            this._cpuValue = new System.Windows.Forms.Label();
+            this._startRead = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this._trackBar)).BeginInit();
             this.SuspendLayout();
             // 
@@ -84,11 +89,62 @@
             this._reset.UseVisualStyleBackColor = true;
             this._reset.Click += new System.EventHandler(this._reset_Click);
             // 
+            // labelCpu
+            // 
+            this.labelCpu.AutoSize = true;
+            this.labelCpu.Location = new System.Drawing.Point(117, 104);
+            this.labelCpu.Name = "labelCpu";
+            this.labelCpu.Size = new System.Drawing.Size(29, 13);
+            this.labelCpu.TabIndex = 5;
+            this.labelCpu.Text = "CPU";
+            // 
+            // labelGPU
+            // 
+            this.labelGPU.AutoSize = true;
+            this.labelGPU.Location = new System.Drawing.Point(116, 123);
+            this.labelGPU.Name = "labelGPU";
+            this.labelGPU.Size = new System.Drawing.Size(30, 13);
+            this.labelGPU.TabIndex = 6;
+            this.labelGPU.Text = "GPU";
+            // 
+            // _gpuValue
+            // 
+            this._gpuValue.AutoSize = true;
+            this._gpuValue.Location = new System.Drawing.Point(160, 123);
+            this._gpuValue.Name = "_gpuValue";
+            this._gpuValue.Size = new System.Drawing.Size(13, 13);
+            this._gpuValue.TabIndex = 8;
+            this._gpuValue.Text = "0";
+            // 
+            // _cpuValue
+            // 
+            this._cpuValue.AutoSize = true;
+            this._cpuValue.Location = new System.Drawing.Point(161, 104);
+            this._cpuValue.Name = "_cpuValue";
+            this._cpuValue.Size = new System.Drawing.Size(13, 13);
+            this._cpuValue.TabIndex = 7;
+            this._cpuValue.Text = "0";
+            // 
+            // _startRead
+            // 
+            this._startRead.Location = new System.Drawing.Point(12, 99);
+            this._startRead.Name = "_startRead";
+            this._startRead.Size = new System.Drawing.Size(75, 23);
+            this._startRead.TabIndex = 9;
+            this._startRead.Text = "Start Read";
+            this._startRead.UseVisualStyleBackColor = true;
+            this._startRead.Click += new System.EventHandler(this._startRead_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 115);
+            this.ClientSize = new System.Drawing.Size(784, 159);
+            this.Controls.Add(this._startRead);
+            this.Controls.Add(this._gpuValue);
+            this.Controls.Add(this._cpuValue);
+            this.Controls.Add(this.labelGPU);
+            this.Controls.Add(this.labelCpu);
             this.Controls.Add(this._reset);
             this.Controls.Add(this.label1);
             this.Controls.Add(this._disconnect);
@@ -109,6 +165,11 @@
         private System.Windows.Forms.Button _disconnect;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button _reset;
+        private System.Windows.Forms.Label labelCpu;
+        private System.Windows.Forms.Label labelGPU;
+        private System.Windows.Forms.Label _gpuValue;
+        private System.Windows.Forms.Label _cpuValue;
+        private System.Windows.Forms.Button _startRead;
     }
 }
 

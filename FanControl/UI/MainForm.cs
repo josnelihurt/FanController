@@ -8,6 +8,7 @@ namespace UI
     public partial class MainForm : Form
     {
         private Timer _timer;
+        private TemperatureReader _temperatureReader;
         public MainForm()
         {
             InitializeComponent();
@@ -15,6 +16,7 @@ namespace UI
             _timer = new Timer();
             _timer.Interval = 500;
             _timer.Tick += Timer_Tick;
+            _temperatureReader = new TemperatureReader();
         }
 
         private FanControlHID _fan;
@@ -64,6 +66,23 @@ namespace UI
                 _fan.Reset();
             }
             SetConnectionState(false);
+        }
+
+        private void _startRead_Click(object sender, EventArgs e)
+        {
+            _temperatureReader.Start();
+            _temperatureReader.OnNewTemperature += temperatureReader_OnNewTemperature;
+        }
+
+        private void temperatureReader_OnNewTemperature(float average, List<TemperatureReader.Sensor> sensors)
+        {
+            var gpu = sensors.Find(x => x.Name == "GPU Core");
+            var cpu = sensors.Find(x => x.Name == "CPU Package");
+            this.Invoke((MethodInvoker)delegate
+            {
+                _gpuValue.Text = gpu.Value.ToString();
+                _cpuValue.Text = cpu.Value.ToString();
+            });
         }
     }
 }
